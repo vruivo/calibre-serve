@@ -60,7 +60,7 @@ class Server extends Manager{
 				throw new Error('calling a request handler before the server is ready');
 			}
 			
-			const url = URL.parse(req.url).pathname.replace(/^\/+|\/+$/,'');
+			const url = req.url.replace(/^\/+|\/+$/,'');
 			
 			let [dbName,command,...args] = url.split('/');
 			if(req.query.dbName){dbName = req.query.dbName;}

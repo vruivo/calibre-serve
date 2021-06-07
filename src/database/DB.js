@@ -1,11 +1,10 @@
-const Promise = require('bluebird');
 const sqlite3 = require('sqlite3').verbose();
 const Statement = require('./Statement');
-const makeWhere = require('./utils/makeWhere');
-const propertiesCollapser = require('./utils/propertiesCollapser');
-const commandsMap = require('./commandsMap');
-const defaultLogger = require('./utils/defaultLogger');
-const compose = require('./utils/compose');
+const commandsMap = require('../commandsMap');
+const makeWhere = require('../utils/makeWhere');
+const propertiesCollapser = require('../utils/propertiesCollapser');
+const defaultLogger = require('../utils/defaultLogger');
+const compose = require('../utils/compose');
 
 const endPoints = Object.keys(commandsMap).map(function(url){
 	return {

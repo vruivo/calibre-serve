@@ -1,9 +1,8 @@
 const path = require('path');
-const Promise = require('bluebird');
-const DB = require('./DB');
+const DB = require('./database/DB');
 const commandsMap = require('./commandsMap');
-const opds = require('opds');
-const opdsMap = require('./opdsMap');
+// const opds = require('opds');
+// const opdsMap = require('./opdsMap');
 
 class Manager{
 	constructor(root,directories,onReady,opts){
@@ -98,48 +97,48 @@ class Manager{
 		}
 		return this._dbs[dbName];
 	}
-	toOPDS(dbName,id,type,results){
-		const {_url_base,_title,_author} = this;
-		const transformed = results.map(item=>opdsMap.series(_url_base,dbName,item));
-		const xml = typeof id !== 'undefined' && transformed.length == 1 ? 
-			opdsMap.page(dbName,_author,transformed[0]) :
-			opdsMap.page(dbName,_author,{books:transformed});
-		return opds.create(xml);
-	}
+	// toOPDS(dbName,id,type,results){
+	// 	const {_url_base,_title,_author} = this;
+	// 	const transformed = results.map(item=>opdsMap.series(_url_base,dbName,item));
+	// 	const xml = typeof id !== 'undefined' && transformed.length == 1 ? 
+	// 		opdsMap.page(dbName,_author,transformed[0]) :
+	// 		opdsMap.page(dbName,_author,{books:transformed});
+	// 	return opds.create(xml);
+	// }
 	getBook(dbName,id){
 		return this.db(dbName).getBook(id);
 	}
-	getBookOPDS(dbName,id){
-		const {_url_base,_title,_author} = this;
-		return this.db(dbName).getBook(id).then(function(books){
-			books = books.map(book=>opdsMap.book(_url_base,dbName,book));
-			return opds.create(
-				opdsMap.page(_title,_author,{books})
-			)
-		});
-	}
+	// getBookOPDS(dbName,id){
+	// 	const {_url_base,_title,_author} = this;
+	// 	return this.db(dbName).getBook(id).then(function(books){
+	// 		books = books.map(book=>opdsMap.book(_url_base,dbName,book));
+	// 		return opds.create(
+	// 			opdsMap.page(_title,_author,{books})
+	// 		)
+	// 	});
+	// }
 	getTag(dbName,id){
 		return this.db(dbName).getTag(id);
 	}
 	getSeries(dbName,id){
 		return this.db(dbName).getSeries(id);
 	}
-	getSeriesOPDS(dbName,id){
-		return this.getSeries(dbName,id)
-			.then(results=>this.toOPDS(dbName,id,'series',results))
-	}
+	// getSeriesOPDS(dbName,id){
+	// 	return this.getSeries(dbName,id)
+	// 		.then(results=>this.toOPDS(dbName,id,'series',results))
+	// }
 	getAuthor(dbName,id){
 		return this.db(dbName).getAuthor(id);
 	}
-	getAuthorOPDS(dbName,id){
-		const {_url_base,_title,_author} = this;
-		return this.getAuthor(dbName,id).then(function(authors){
-			authors = authors.map(a=>opdsMap.author(_url_base,dbName,a))
-			return opds.create(
-				opdsMap.page(_title,_author,{authors})
-			);
-		});
-	}
+	// getAuthorOPDS(dbName,id){
+	// 	const {_url_base,_title,_author} = this;
+	// 	return this.getAuthor(dbName,id).then(function(authors){
+	// 		authors = authors.map(a=>opdsMap.author(_url_base,dbName,a))
+	// 		return opds.create(
+	// 			opdsMap.page(_title,_author,{authors})
+	// 		);
+	// 	});
+	// }
 	get(handle,opds=false){
 		if(!handle){return Promise.reject(new Error('no path provided'))};
 		const [dbName,command,...args] = handle.split('/');
@@ -168,14 +167,14 @@ class Manager{
 		,	databases
 		});
 	}
-	getListOPDS(dbName){
-		const {_url_base,_title,_author} = this;
-		return this.getList(dbName).then(function(db){
-			return opds.create(
-				opdsMap.page(_title,_author,opdsMap.root(_url_base,db))
-			); 
-		})
-	}
+	// getListOPDS(dbName){
+	// 	const {_url_base,_title,_author} = this;
+	// 	return this.getList(dbName).then(function(db){
+	// 		return opds.create(
+	// 			opdsMap.page(_title,_author,opdsMap.root(_url_base,db))
+	// 		); 
+	// 	})
+	// }
 }
 
 function makeManager(root,directories,onReady){

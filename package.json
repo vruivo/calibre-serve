@@ -11,15 +11,13 @@
   "author": "Jad <jad@sarout.com>",
   "license": "MIT",
   "dependencies": {
-    "bluebird": "^3.4.1",
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
     "express-session": "^1.13.0",
     "moment": "^2.13.0",
-    "opds": "^2.0.0",
     "serve-favicon": "^2.3.0",
-    "session-file-store": "^0.2.0",
-    "sqlite3": "^3.1.4",
+    "session-file-store": "^1.5.0",
+    "sqlite3": "^5.0.0",
     "squel": "^5.3.2"
   },
   "devDependencies": {},
