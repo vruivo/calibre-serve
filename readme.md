@@ -1,3 +1,7 @@
+[![Known Vulnerabilities](https://snyk.io/test/github/vruivo/calibre-serve/badge.svg)](https://snyk.io/test/github/vruivo/calibre-serve)
+
+============= Original README ============
+
 # Calibre-Serve
 
 A [Calibre](https://calibre-ebook.com/) API manager and server.
