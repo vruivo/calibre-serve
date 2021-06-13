@@ -1,3 +1,6 @@
 node_modules
 npm-debug.log
 sessions
+
+.nyc_output/
+coverage/
