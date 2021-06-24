@@ -210,7 +210,7 @@ describe('DB.js', function() {
       assert.deepStrictEqual(result, expected_result);
     });
 
-    it('get a specific book', async function() {
+    it('get a specific book, by id', async function() {
       const expected_result = [
         {
           "book_id": 4,
@@ -254,6 +254,60 @@ describe('DB.js', function() {
       const database1 = await DB1('test-db', ':memory:');
       database1._db = db;
       const result = await database1.getBook(4);
+
+      // const database2 = await DB2('test-db', ':memory:');
+      // database2._db = db;
+      // const result = await database2.getBook(4);
+
+      // console.log(JSON.stringify(result, null, 2));
+
+      assert.deepStrictEqual(result, expected_result);
+    });
+
+    it('get a specific book, by title', async function() {
+      const expected_result = [
+        {
+          "book_id": 4,
+          "book_title": "The Importance of Being Earnest",
+          "book_sort": "Importance of Being Earnest, The",
+          "book_has_cover": 1,
+          "book_date": "2014-05-25 00:00:00+00:00",
+          "book_path": "Oscar Wilde/The Importance of Being Earnest (4)",
+          "book_isbn": "",
+          "book_series_index": 1,
+          "comment": "A comedy skewering Victorian high society.",
+          "tags": [
+            {
+              "tag_id": "16",
+              "tag_name": "Comedies"
+            },
+            {
+              "tag_id": "18",
+              "tag_name": "Identity (Psychology) -- Drama"
+            }
+          ],
+          "authors": [
+            {
+              "author_sort": "Wilde, Oscar",
+              "author_id": "4",
+              "author_name": "Oscar Wilde"
+            }
+          ],
+          "series": [],
+          "data": [
+            {
+              "data_id": "4",
+              "data_format": "EPUB",
+              "data_size": "375170",
+              "data_name": "The Importance of Being Earnest - Oscar Wilde"
+            }
+          ]
+        }
+      ];
+
+      const database1 = await DB1('test-db', ':memory:');
+      database1._db = db;
+      const result = await database1.getBook('importance');
 
       // const database2 = await DB2('test-db', ':memory:');
       // database2._db = db;
@@ -400,7 +454,7 @@ describe('DB.js', function() {
       assert.deepStrictEqual(result, expected_result);
     });
 
-    it('get a specific tag', async function() {
+    it('get a specific tag, by id', async function() {
       const expected_result = [
         {
           books: [
@@ -432,6 +486,44 @@ describe('DB.js', function() {
       const database1 = await DB1('test-db', ':memory:');
       database1._db = db;
       const result = await database1.getTag(1);
+
+      // console.log(JSON.stringify(result, null, 2));
+
+      assert.deepStrictEqual(result, expected_result);
+    });
+
+    it('get a specific tag, by name', async function() {
+      const expected_result = [
+        {
+          books: [
+            {
+              book_has_cover: '1',
+              book_id: '7',
+              book_path: 'Leo Tolstoy/Short Fiction (7)',
+              book_pubdate: '2021-04-27 00:44:58+00:00',
+              book_series_index: '1.0',
+              book_sort: 'Short Fiction',
+              book_title: 'Short Fiction'
+            },
+            {
+              book_has_cover: undefined,
+              book_id: '8',
+              book_path: 'Maurice Leblanc/The Extraordinary Adventures of Arse (8)',
+              book_pubdate: '2018-03-27 23:44:46+00:00',
+              book_series_index: undefined,
+              book_sort: 'Extraordinary Adventures of Arsène Lupin, Gentleman-Burglar, The',
+              book_title: 'The Extraordinary Adventures of Arsène Lupin, Gentleman-Burglar'
+            }
+          ],
+          tag_books_count: 2,
+          tag_id: 1,
+          tag_name: 'Short stories'
+        }
+      ];
+
+      const database1 = await DB1('test-db', ':memory:');
+      database1._db = db;
+      const result = await database1.getTag('short stories');
 
       // console.log(JSON.stringify(result, null, 2));
 
@@ -477,7 +569,7 @@ describe('DB.js', function() {
       assert.deepStrictEqual(result, expected_result);
     });
 
-    it('get a specific series', async function() {
+    it('get a specific series, by id', async function() {
       const expected_result = [
         {
           "series_id": 1,
@@ -500,6 +592,35 @@ describe('DB.js', function() {
       const database1 = await DB1('test-db', ':memory:');
       database1._db = db;
       const result = await database1.getSeries(1);
+
+      // console.log(JSON.stringify(result, null, 2));
+
+      assert.deepStrictEqual(result, expected_result);
+    });
+
+    it('get a specific series, by name', async function() {
+      const expected_result = [
+        {
+          "series_id": 1,
+          "series_name": "Arsène Lupin",
+          "series_sort": "Arsène Lupin",
+          "books": [
+            {
+              "book_id": "8",
+              "book_title": "The Extraordinary Adventures of Arsène Lupin, Gentleman-Burglar",
+              "book_sort": "Extraordinary Adventures of Arsène Lupin, Gentleman-Burglar, The",
+              "book_has_cover": "1",
+              "book_pubdate": "2018-03-27 23:44:46+00:00",
+              "book_path": "Maurice Leblanc/The Extraordinary Adventures of Arse (8)",
+              "book_series_index": "1.0"
+            }
+          ]
+        }
+      ];
+
+      const database1 = await DB1('test-db', ':memory:');
+      database1._db = db;
+      const result = await database1.getSeries('Arsène');
 
       // console.log(JSON.stringify(result, null, 2));
 
@@ -598,7 +719,7 @@ describe('DB.js', function() {
       assert.deepStrictEqual(result, expected_result);
     });
 
-    it('get a specific author', async function() {
+    it('get a specific author, by id', async function() {
       const expected_result = [
         {
           "authors_books_count": 1,
@@ -629,6 +750,43 @@ describe('DB.js', function() {
       const database1 = await DB1('test-db', ':memory:');
       database1._db = db;
       const result = await database1.getAuthor(5);
+
+      // console.log(JSON.stringify(result, null, 2));
+
+      assert.deepStrictEqual(result, expected_result);
+    });
+
+    it('get a specific author, by name', async function() {
+      const expected_result = [
+        {
+          "authors_books_count": 1,
+          "author_id": 5,
+          "author_name": "Maurice Leblanc",
+          "author_sort": "Leblanc, Maurice",
+          "books": [
+            {
+              "book_id": "8",
+              "book_title": "The Extraordinary Adventures of Arsène Lupin, Gentleman-Burglar",
+              "book_sort": "Extraordinary Adventures of Arsène Lupin, Gentleman-Burglar, The",
+              "book_has_cover": "1",
+              "book_pubdate": "2018-03-27 23:44:46+00:00",
+              "book_path": "Maurice Leblanc/The Extraordinary Adventures of Arse (8)",
+              "book_series_index": "1.0"
+            }
+          ],
+          "series": [
+            {
+              "series_id": "1",
+              "series_name": "Arsène Lupin",
+              "series_sort": "Arsène Lupin"
+            }
+          ]
+        }
+      ];
+
+      const database1 = await DB1('test-db', ':memory:');
+      database1._db = db;
+      const result = await database1.getAuthor('Maurice Leblanc');
 
       // console.log(JSON.stringify(result, null, 2));
 

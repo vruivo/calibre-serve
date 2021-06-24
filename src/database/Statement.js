@@ -1,8 +1,9 @@
+const makeWhere = require('../utils/makeWhere');
 
 class Statement{
 
 	getBookQuery(book) {
-		const where_str = (book == undefined) ? `book_id LIKE '%'` : `book_id = ?`;
+		const [where_str, value] = makeWhere('book', book, 'title', '_');
 
 		const SQL = `SELECT
 		books.id AS "book_id", books.title AS "book_title", books.sort AS "book_sort", books.author_sort AS "author_sort", books.has_cover AS "book_has_cover", books.pubdate AS "book_date", books.path AS "book_path", books.isbn AS "book_isbn", books.series_index AS "book_series_index", 
@@ -25,12 +26,12 @@ class Statement{
 
 		return {
 			sql: SQL,
-			parameters: book
+			parameters: value
 		}
 	}
 
 	getTagQuery(tag) {
-		const where_str = (tag == undefined) ? `tags.id LIKE '%'` : `tags.id = ?`;
+		const [where_str, value] = makeWhere('tags', tag);
 
 		const SQL = `SELECT
 		(SELECT GROUP_CONCAT(books_id, '|') FROM (SELECT DISTINCT books.id books_id FROM books_tags_link JOIN books ON books_tags_link.book = books.id WHERE books_tags_link.tag = tags.id)) AS "book_id", (SELECT GROUP_CONCAT(books_title, '|') FROM (SELECT DISTINCT books.title books_title FROM books_tags_link JOIN books ON books_tags_link.book = books.id WHERE books_tags_link.tag = tags.id)) AS "book_title", (SELECT GROUP_CONCAT(books_sort, '|') FROM (SELECT DISTINCT books.sort books_sort FROM books_tags_link JOIN books ON books_tags_link.book = books.id WHERE books_tags_link.tag = tags.id)) AS "book_sort", (SELECT GROUP_CONCAT(books_has_cover, '|') FROM (SELECT DISTINCT books.has_cover books_has_cover FROM books_tags_link JOIN books ON books_tags_link.book = books.id WHERE books_tags_link.tag = tags.id)) AS "book_has_cover", (SELECT GROUP_CONCAT(books_pubdate, '|') FROM (SELECT DISTINCT books.pubdate books_pubdate FROM books_tags_link JOIN books ON books_tags_link.book = books.id WHERE books_tags_link.tag = tags.id)) AS "book_pubdate", (SELECT GROUP_CONCAT(books_path, '|') FROM (SELECT DISTINCT books.path books_path FROM books_tags_link JOIN books ON books_tags_link.book = books.id WHERE books_tags_link.tag = tags.id)) AS "book_path", (SELECT GROUP_CONCAT(books_series_index, '|') FROM (SELECT DISTINCT books.series_index books_series_index FROM books_tags_link JOIN books ON books_tags_link.book = books.id WHERE books_tags_link.tag = tags.id)) AS "book_series_index", tags.name AS "tag_name", tags.id AS "tag_id", tags.count AS "tag_books_count"
@@ -42,12 +43,12 @@ class Statement{
 
 		return {
 			sql: SQL,
-			parameters: tag
+			parameters: value
 		}
 	}
 
 	getSeriesQuery(series) {
-		const where_str = (series == undefined) ? `series.id LIKE '%'` : `series.id = ?`;
+		const [where_str, value] = makeWhere('series', series);
 
 		const SQL = `SELECT
 		(SELECT GROUP_CONCAT(books_id, '|') FROM (SELECT DISTINCT books.id books_id FROM books_series_link JOIN books ON books_series_link.book = books.id WHERE books_series_link.series = series.id)) AS "book_id", (SELECT GROUP_CONCAT(books_title, '|') FROM (SELECT DISTINCT books.title books_title FROM books_series_link JOIN books ON books_series_link.book = books.id WHERE books_series_link.series = series.id)) AS "book_title", (SELECT GROUP_CONCAT(books_sort, '|') FROM (SELECT DISTINCT books.sort books_sort FROM books_series_link JOIN books ON books_series_link.book = books.id WHERE books_series_link.series = series.id)) AS "book_sort", (SELECT GROUP_CONCAT(books_has_cover, '|') FROM (SELECT DISTINCT books.has_cover books_has_cover FROM books_series_link JOIN books ON books_series_link.book = books.id WHERE books_series_link.series = series.id)) AS "book_has_cover", (SELECT GROUP_CONCAT(books_pubdate, '|') FROM (SELECT DISTINCT books.pubdate books_pubdate FROM books_series_link JOIN books ON books_series_link.book = books.id WHERE books_series_link.series = series.id)) AS "book_pubdate", (SELECT GROUP_CONCAT(books_path, '|') FROM (SELECT DISTINCT books.path books_path FROM books_series_link JOIN books ON books_series_link.book = books.id WHERE books_series_link.series = series.id)) AS "book_path", (SELECT GROUP_CONCAT(books_series_index, '|') FROM (SELECT DISTINCT books.series_index books_series_index FROM books_series_link JOIN books ON books_series_link.book = books.id WHERE books_series_link.series = series.id)) AS "book_series_index", series.id AS "series_id", series.name AS "series_name", series.sort AS "series_sort"
@@ -59,12 +60,12 @@ class Statement{
 
 		return {
 			sql: SQL,
-			parameters: series
+			parameters: value
 		}
 	}
 
 	getAuthorQuery(author) {
-		const where_str = (author == undefined) ? `authors.id LIKE '%'` : `authors.id = ?`;
+		const [where_str, value] = makeWhere('authors', author);
 
 		const SQL = `SELECT
 		(SELECT GROUP_CONCAT(books_id, '|') FROM (SELECT DISTINCT books.id books_id FROM books_authors_link JOIN books ON books_authors_link.book = books.id WHERE books_authors_link.author = authors.id)) AS "book_id", (SELECT GROUP_CONCAT(books_title, '|') FROM (SELECT DISTINCT books.title books_title FROM books_authors_link JOIN books ON books_authors_link.book = books.id WHERE books_authors_link.author = authors.id)) AS "book_title", (SELECT GROUP_CONCAT(books_sort, '|') FROM (SELECT DISTINCT books.sort books_sort FROM books_authors_link JOIN books ON books_authors_link.book = books.id WHERE books_authors_link.author = authors.id)) AS "book_sort", (SELECT GROUP_CONCAT(books_has_cover, '|') FROM (SELECT DISTINCT books.has_cover books_has_cover FROM books_authors_link JOIN books ON books_authors_link.book = books.id WHERE books_authors_link.author = authors.id)) AS "book_has_cover", (SELECT GROUP_CONCAT(books_pubdate, '|') FROM (SELECT DISTINCT books.pubdate books_pubdate FROM books_authors_link JOIN books ON books_authors_link.book = books.id WHERE books_authors_link.author = authors.id)) AS "book_pubdate", (SELECT GROUP_CONCAT(books_path, '|') FROM (SELECT DISTINCT books.path books_path FROM books_authors_link JOIN books ON books_authors_link.book = books.id WHERE books_authors_link.author = authors.id)) AS "book_path", (SELECT GROUP_CONCAT(books_series_index, '|') FROM (SELECT DISTINCT books.series_index books_series_index FROM books_authors_link JOIN books ON books_authors_link.book = books.id WHERE books_authors_link.author = authors.id)) AS "book_series_index", (SELECT GROUP_CONCAT(series_id, '|') FROM (SELECT DISTINCT series.id series_id FROM books_series_link JOIN series ON books_series_link.series = series.id WHERE books_series_link.book = books.id)) AS "series_id", (SELECT GROUP_CONCAT(series_name, '|') FROM (SELECT DISTINCT series.name series_name FROM books_series_link JOIN series ON books_series_link.series = series.id WHERE books_series_link.book = books.id)) AS "series_name", (SELECT GROUP_CONCAT(series_sort, '|') FROM (SELECT DISTINCT series.sort series_sort FROM books_series_link JOIN series ON books_series_link.series = series.id WHERE books_series_link.book = books.id)) AS "series_sort", tag_browser_authors.count AS "authors_books_count", authors.id AS "author_id", authors.name AS "author_name", authors.sort AS "author_sort"
@@ -77,7 +78,7 @@ class Statement{
 		
 		return {
 			sql: SQL,
-			parameters: author
+			parameters: value
 		}
 	}
 
