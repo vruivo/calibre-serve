@@ -72,19 +72,11 @@ function startServer(root,title='Calibre Server',port=3000,tokens=false,footer='
 				app.use(`${static}`,auth.verify,express.static(root))
 				app.use(auth.login,requestHandler);
 			}else{
-				// app.use(`${static}`,express.static(root));
-				app.use(`${static}`,express.static(root, {
-				// 	index: false,
+				app.use(`${static}`, express.static(root, {
 					setHeaders: (res, filepath) => {
-				// 		console.log('res:', res);
-				// 		console.log('path:', filepath);
-						const extension = path.extname(filepath);
 						const filename = path.basename(filepath);
-						// console.log('extension:', extension);
-						// console.log('filename', filename);
-
+						const extension = path.extname(filepath);
 						if (extension === '.kepub') {
-				// 			res.setHeader('Content-Type', 'application/epub+zip');
 							res.setHeader('Content-Disposition', `attachment; filename="${filename}.epub"`);
 						}
 					}
