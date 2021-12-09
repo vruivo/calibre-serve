@@ -9,6 +9,7 @@ const localStatic = path.resolve(__dirname,'src/vendor');
 const authentication = require('./src/authentication');
 const URL = require('url');
 const moment = require('moment');
+const apiRoutes = require('./src/routes/apiRoutes');
 
 function formatLog(req,url){
 	const ip = req.ip || req.header('x-forwarded-for') || req.connection.remoteAddress;
@@ -55,7 +56,7 @@ function startServer(root,title='Calibre Server',port=3000,tokens=false,footer='
 		, ga
 		, doAuthenticate
 		}
-	,	function(err,requestHandler){
+	,	function(err,requestHandler, dbAccess){
 			if(err){throw err;}
 
 			app.set('trust proxy', 1);
@@ -71,7 +72,26 @@ function startServer(root,title='Calibre Server',port=3000,tokens=false,footer='
 				app.use(`${static}`,auth.verify,express.static(root))
 				app.use(auth.login,requestHandler);
 			}else{
-				app.use(`${static}`,express.static(root))
+				// app.use(`${static}`,express.static(root));
+				app.use(`${static}`,express.static(root, {
+				// 	index: false,
+					setHeaders: (res, filepath) => {
+				// 		console.log('res:', res);
+				// 		console.log('path:', filepath);
+						const extension = path.extname(filepath);
+						const filename = path.basename(filepath);
+						// console.log('extension:', extension);
+						// console.log('filename', filename);
+
+						if (extension === '.kepub') {
+				// 			res.setHeader('Content-Type', 'application/epub+zip');
+							res.setHeader('Content-Disposition', `attachment; filename="${filename}.epub"`);
+						}
+					}
+				}));
+				app.use('/page',express.static('./client/index.html'))
+				app.use('/js',express.static('./client/js/'))
+				app.use('/api', apiRoutes(dbAccess));
 				app.use(requestHandler);
 			}
 			app.use(errorLog);

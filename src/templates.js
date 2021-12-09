@@ -52,6 +52,9 @@ function renderFileLink(file,book_path,book_id,dbName,options){
 	const extension = data_format.toLowerCase();
 	const fileName = `${data_name}.${extension}`;
 	const filePath = getFileLink(fileName,book_path,book_id,dbName,options)
+        if (extension === 'kepub') {
+		return `<span class="downloadLink"><a href="${filePath}" download="${filePath}.epub">as ${data_format}</a></span>`;
+	}
 	const readOnline = (extension == 'epub') ? `<span class="downloadLink readOnlineLink"><a onClick="openBook('${filePath}')"> & read online</a></span>` : '';
 	return `<span class="downloadLink"><a href="${filePath}">as ${data_format}</a></span>${readOnline}`;
 }

@@ -14,7 +14,8 @@ function statusFromErr(err){
 
 class Server extends Manager{
 	constructor(root,directories,onReady){
-		super(root,directories,onReady)
+		super(root,directories,onReady);
+		this.getManagerDbAcessMethods = this.getManagerDbAcessMethods.bind(this);
 	}
 	getTemplate(templates,name){
 		return templates[name] || templates.default;
@@ -44,6 +45,13 @@ class Server extends Manager{
 		const text = template(err,status,[command,argument],dbName,options);
 		res.status(status).send(text);
 	}
+	getManagerDbAcessMethods() {
+		const self = this;
+		return {
+			getBook: self.getBook,
+			getTag: self.getTag
+		}
+	}
 	getRequestHandler(options){
 
 		const self = this;
@@ -54,7 +62,7 @@ class Server extends Manager{
 		function errorHandler(err,req,res,next){
 			self.error(req,res,templates,null,null,null,err,options);
 		}
-		function requestHandler(req,res,next){		
+		function requestHandler(req,res,next){
 
 			if(!self._ready){
 				throw new Error('calling a request handler before the server is ready');
@@ -118,7 +126,8 @@ function connect(options,onReady){
 	makeServer(root,directories,function(err,LIB){
 		if(err){return onReady(err);}
 		const requestHandler = LIB.getRequestHandler(options);
-		onReady(null,requestHandler);
+		const dbAccess = LIB.getManagerDbAcessMethods();
+		onReady(null,requestHandler, dbAccess);
 	})
 }
 

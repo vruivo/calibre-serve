@@ -139,7 +139,7 @@ class DB{
 
 
 module.exports = function getDB(name,path){
-	return new Promise(function(resolve,reject){	
+	return new Promise(function(resolve,reject){
 		const db = new sqlite3.Database(path,sqlite3.OPEN_READONLY,function(err){
 			if(err){return reject(err);}
 

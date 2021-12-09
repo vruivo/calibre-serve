@@ -1,0 +1,25 @@
+GET http://localhost:3000/api/books HTTP/1.1
+content-type: application/json
+
+{
+    "library": "Calibre Library",
+    "book_id": 85
+}
+
+###
+
+GET http://localhost:3000/api/books HTTP/1.1
+content-type: application/json
+
+{
+    "library": "Calibre Library",
+    "book_id": "money"
+}
+
+###
+
+GET http://localhost:3000/api/Calibre Library/books
+
+###
+
+GET http://localhost:3000/api/Calibre Library/books/money

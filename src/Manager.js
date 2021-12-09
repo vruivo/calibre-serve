@@ -24,6 +24,8 @@ class Manager{
 					throw err;
 				})
 		}
+		this.getBook = this.getBook.bind(this);
+		this.getTag = this.getTag.bind(this);
 	}
 	set(dbName,setReady){
 		const _path = path.join(this._root,dbName,'metadata.db');
@@ -105,7 +107,7 @@ class Manager{
 	// 		opdsMap.page(dbName,_author,{books:transformed});
 	// 	return opds.create(xml);
 	// }
-	getBook(dbName,id){
+	getBook(dbName,id) {
 		return this.db(dbName).getBook(id);
 	}
 	// getBookOPDS(dbName,id){
@@ -117,7 +119,7 @@ class Manager{
 	// 		)
 	// 	});
 	// }
-	getTag(dbName,id){
+	getTag(dbName,id) {
 		return this.db(dbName).getTag(id);
 	}
 	getSeries(dbName,id){
